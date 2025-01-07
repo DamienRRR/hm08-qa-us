@@ -1,5 +1,5 @@
 module.exports = {
-    // All previous selectors stay the same
+    // Inputs
     fromField: '#from',
     toField: '#to',
     phoneNumberField: '#phone',
@@ -7,6 +7,8 @@ module.exports = {
     cardNumberField: '#number',
     cardCodeField: '#code',
     messageField: '#comment',
+
+    // Buttons
     callATaxiButton: 'button=Call a taxi',
     phoneNumberButton: '//div[starts-with(text(), "Phone number")]',
     nextButton: 'button=Next',
@@ -22,14 +24,16 @@ module.exports = {
     searchModal: '.order-body',
     driverModal: '#root > div > div.order.shown > div.order-body',
 
-    // Keep all previous functions the same
     fillAddresses: async function (from, to) {
         const fromField = await $(this.fromField);
         await fromField.setValue(from);
+        await expect(fromField).toHaveValue(from);
         const toField = await $(this.toField);
         await toField.setValue(to);
+        await expect(toField).toHaveValue(to);
         const callATaxiButton = await $(this.callATaxiButton);
         await callATaxiButton.waitForDisplayed();
+        await expect(callATaxiButton).toBeClickable();
         await callATaxiButton.click();
     },
 
@@ -38,10 +42,12 @@ module.exports = {
         await phoneNumberButton.waitForDisplayed();
         await phoneNumberButton.click();
         const phoneNumberModal = await $(this.phoneNumberModal);
-        await phoneNumberModal.waitForDisplayed()
+        await phoneNumberModal.waitForDisplayed();
+        await expect(phoneNumberModal).toBeDisplayed();
         const phoneNumberField = await $(this.phoneNumberField);
         await phoneNumberField.waitForDisplayed();
         await phoneNumberField.setValue(phoneNumber);
+        await expect(phoneNumberField).toHaveValue(phoneNumber);
     },
 
     submitPhoneNumber: async function (phoneNumber) {
@@ -51,9 +57,10 @@ module.exports = {
         await browser.pause(2000);
         const codeField = await $(this.codeField);
         const requests = await browser.getRequests();
-        await expect(requests.length).toBe(1)
+        await expect(requests.length).toBe(1);
         const code = await requests[0].response.body.code;
         await codeField.setValue(code);
+        await expect(codeField).toHaveValue(code.toString());
         await $(this.confirmButton).click();
     },
 
@@ -72,16 +79,18 @@ module.exports = {
         await plusButton.click();
         await browser.pause(2000);
 
-        // Fill card details
+        // Fill card details and verify
         const cardNumberInput = await $('.card-input#number');
         await cardNumberInput.waitForDisplayed({ timeout: 10000 });
         await cardNumberInput.setValue(cardNumber);
+        await expect(cardNumberInput).toHaveValue(cardNumber);
         await browser.pause(1000);
 
-        // Fill CVV
+        // Fill CVV and verify
         const codeInput = await $('.card-input#code');
         await codeInput.waitForDisplayed({ timeout: 10000 });
         await codeInput.setValue(cardCode);
+        await expect(codeInput).toHaveValue(cardCode);
         await browser.pause(1000);
 
         // Move focus from CVV field
@@ -106,6 +115,7 @@ module.exports = {
 
         // Click the Link button
         await linkButton.waitForClickable({ timeout: 10000 });
+        await expect(linkButton).toBeClickable();
         await linkButton.click();
         await browser.pause(2000);
 
@@ -148,6 +158,7 @@ module.exports = {
         // First wait for and verify the search modal
         const searchModal = await $(this.searchModal);
         await searchModal.waitForDisplayed({ timeout: 10000 });
+        await expect(searchModal).toBeDisplayed();
 
         // Wait for enough time for the search countdown (36 seconds + buffer)
         await browser.pause(40000);  // 40 seconds total wait
