@@ -1,4 +1,4 @@
-# Sprint 8 Final Project: Urban.Routes QA
+# Automated testing for the Urban Routes app
 
 ## Description
 This project implements automated testing for the Urban.Routes taxi ordering application. Using WebdriverIO with Mocha framework, the tests verify the complete taxi ordering process from address entry to driver assignment.
